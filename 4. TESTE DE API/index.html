@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Busca de Operadoras</title>
+</head>
+
+<body>
+    <div id="app">
+        <input type="text" v-model="termo" placeholder="Digite o termo de busca">
+        <button @click="buscarOperadora">Buscar</button>
+        <div v-if="operadoras.length > 0">
+            <ul v-for="operadora in operadoras" :key="operadora.Nome_Fantasia">
+                <li v-for="(value, key) in operadora">
+                    <strong>{{ key }}:</strong> {{ value }}
+                </li>
+            </ul>
+        </div>
+        <p v-else> Nenhum resultado encontrado.</p>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                termo: '',
+                operadoras: []
+            },
+            methods: {
+                buscarOperadora() {
+                    fetch(`http://127.0.0.1:5000/buscar-operadora?termo=${this.termo}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            this.operadoras = data;
+                        })
+                        .catch(error => console.error('Erro ao buscar operadoras:', error));
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
